@@ -1,12 +1,21 @@
 import { Stack, SplashScreen } from "expo-router";
 import {useFonts} from 'expo-font';
 import { useEffect } from "react";
+import { ClerkProvider, ClerkLoaded } from "@clerk/clerk-expo"
 import "../global.css";
 
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { tokenCache } from "@/cache";
 
 const RootLayout = () => {
+
+  const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+  if (!publishableKey) {
+    throw new Error('Add EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY to your .env file')
+  }
+
   const [fontsLoaded, error] = useFonts({
     "Poppins-Black": require("../assets/fonts/Poppins-Black.ttf"),
     "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
@@ -36,9 +45,13 @@ const RootLayout = () => {
   }
 
   return (
-    <Stack >
-      <Stack.Screen name="index" options={{headerShown: false}}/>
-    </Stack>
+    <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
+      <ClerkLoaded>
+        <Stack screenOptions={{headerShown: false}}>
+          <Stack.Screen name="index" options={{headerShown: false}}/>
+        </Stack>
+      </ClerkLoaded>
+    </ClerkProvider>
   )
 }
 
