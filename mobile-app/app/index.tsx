@@ -4,22 +4,19 @@ import { useRouter, Link } from "expo-router"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { StatusBar } from "expo-status-bar"
 import { images } from "../constants"
-// This is a placeholder function. Replace it with your actual authentication check.
-const isUserSignedIn = () => {
-  // Implement your authentication check here
-  return false
-}
-
+import { useAuth } from "@clerk/clerk-expo"
 export default function Index() {
+  const { isLoaded, isSignedIn } = useAuth();
   const router = useRouter()
 
   useEffect(() => {
-    setTimeout(() => {
-      if (isUserSignedIn()) {
-        router.replace("/Home")
+      if(!isLoaded){
+        return;
       }
-    },0)
-  }, [router]) // Added router to dependencies
+      if (isSignedIn) {
+        router.replace("/(tabs)/Home")
+      }
+    }, [isLoaded, isSignedIn, router])
 
   return (
     <SafeAreaView className="bg-green-50 h-full ">

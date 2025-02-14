@@ -198,16 +198,6 @@ const EcoScanPage = () => {
                 </View>
               ))}
             </View>
-
-            <TouchableOpacity
-              className="bg-green-700 rounded-lg py-3 px-4 flex-row justify-center items-center"
-              onPress={() => {
-                /* Implement share functionality */
-              }}
-            >
-              <Share2 size={20} color="white" />
-              <Text className="ml-2 text-white font-bold">Share Results</Text>
-            </TouchableOpacity>
           </View>
         )}
 
