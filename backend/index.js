@@ -19,7 +19,8 @@ mongoose.connect(process.env.MONGO_DB_URL)
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('Could not connect to MongoDB:', err));
 
-const User = require("./models/user-schema")
+const User = require("./models/user-schema");
+const { log } = require("console");
 
 app.post('/api/webhooks/user', express.raw({ type: 'application/json' }), async (req, res) => {
     try {
@@ -28,6 +29,7 @@ app.post('/api/webhooks/user', express.raw({ type: 'application/json' }), async 
         // Check for the event type (user.created, user.updated, etc.)
         if (evt.type === 'user.created') {
             const { id, email_addresses } = evt.data;
+            log(id, email_addresses);
             // Create a new user in *your* database
             const newUser = new User({
                 clerkUserId: id,
