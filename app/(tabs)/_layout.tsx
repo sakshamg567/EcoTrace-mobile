@@ -60,15 +60,15 @@ const TabsLayout = () => {
                }}
             />
             <Tabs.Screen
-               name='ProductAgent'
+               name='EcoScan'
                options={{
-                  title: "ProductAgent",
+                  title: "EcoScan",
                   headerShown: false,
                   tabBarIcon: ({color, focused}) => (
                      <TabIcon
                         icon={icons.search}
                         color={color}
-                        name={"ProductAgent"}
+                        name={"EcoScan"}
                         focused={focused}
                      />
                

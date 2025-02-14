@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, TouchableOpacity, Alert, ActivityIndicator, Text } from 'react-native';
+import { View, ScrollView, TouchableOpacity, Alert, ActivityIndicator, Text, SafeAreaView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 // Import new components
@@ -125,26 +125,28 @@ const HomeScreen = () => {
 
 
     return (
-        <ScrollView className="flex-1 bg-[#f8ffe5] pt-5 text-[#06d6a0]">
-            {/* 1. Eco Score Section */}
-            <EcoScoreDisplay ecoScore={ecoScore} />
-
-            {/* 2. 7-Day Carbon Chart */}
-            <CarbonEmissionsChart chartData={chartData} />
-            {/* <TestChart/> */}
-
-            {/* 3. Action Cards Section */}
-            <EcoActionsCarousel actionCards={mockActionCards} />
-
-            {/* 4. Bottom Metrics Section */}
-            <TodayMetrics todayEmissions={todayEmissions} todayTrend={todayTrend} co2Saved={mockCO2Saved} />
-
-
-            {/* Floating Action Button */}
-            <TouchableOpacity className="absolute bottom-5 right-5 bg-green-500 rounded-full w-14 h-14 justify-center items-center shadow-md" onPress={() => Alert.alert('Action', 'Log new activity (placeholder)')}>
+        <SafeAreaView className='h-full'>
+            <ScrollView className="flex-1 bg-white pt-5 text-[#06d6a0]">
+                {/* 1. Eco Score Section */}
+                <EcoScoreDisplay ecoScore={ecoScore} />
+    
+                {/* 2. 7-Day Carbon Chart */}
+                <CarbonEmissionsChart chartData={chartData} />
+                {/* <TestChart/> */}
+    
+                {/* 3. Action Cards Section */}
+                <EcoActionsCarousel actionCards={mockActionCards} />
+    
+                {/* 4. Bottom Metrics Section */}
+                <TodayMetrics todayEmissions={todayEmissions} todayTrend={todayTrend} co2Saved={mockCO2Saved} />
+    
+    
+                {/* Floating Action Button */}
+                <TouchableOpacity className="absolute bottom-5 right-5 bg-green-500 rounded-full w-14 h-14 justify-center items-center shadow-md" onPress={() => Alert.alert('Action', 'Log new activity (placeholder)')}>
                 <MaterialCommunityIcons name="plus" size={30} color="white" />
-            </TouchableOpacity>
-        </ScrollView>
+                </TouchableOpacity>
+            </ScrollView>
+        </SafeAreaView>
     );
 };
 

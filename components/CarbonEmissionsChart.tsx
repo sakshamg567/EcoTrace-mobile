@@ -15,7 +15,7 @@ const CarbonEmissionsChart: React.FC<CarbonEmissionsChartProps> = ({ chartData }
    if (!chartData || !chartData.datasets || chartData.datasets.length === 0 || !chartData.labels) {
       return (
          <View className="px-5 mb-8">
-            <Text className="text-xs text-white mb-3">
+            <Text className="text-xl font-semibold text-green-900 mb-3">
                Weekly Carbon Emissions
             </Text>
             <View className="bg-white rounded-2xl py-3 shadow-md border border-gray-100 h-64 justify-center items-center">
@@ -75,7 +75,7 @@ const CarbonEmissionsChart: React.FC<CarbonEmissionsChartProps> = ({ chartData }
 
    return (
       <View className="px-5 mb-8">
-         <Text className="text-xl font-pbold text-green-900 mb-3">
+         <Text className="text-lg font-pmedium text-green-900 mb-3">
             Weekly Carbon Emissions
          </Text>
          <View className="bg-white rounded-2xl py-3 shadow-md border border-gray-100">
