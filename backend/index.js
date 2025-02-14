@@ -1,71 +1,106 @@
-// server.js
-require("dotenv").config();
-const express = require("express");
-const path = require("path");
+// server.js (or index.js)
+const express = require('express');
+const mongoose = require('mongoose');
 const cors = require('cors');
-const analysisRoutes = require('./routes/analysisRoutes');
-const emissionRoutes = require('./routes/emissionRoutes')
-const { ClerkExpressRequireAuth } = require('@clerk/express');
-const mongoose = require("mongoose")
-
-
+const { clerkMiddleware } = require('@clerk/express'); //  SIMPLIFIED IMPORT
+require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const port = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "dist"))); // Serve static files
 
 mongoose.connect(process.env.MONGO_DB_URL)
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('Could not connect to MongoDB:', err));
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Could not connect to MongoDB:', err));
 
-const User = require("./models/user-schema");
-const { log } = require("console");
+const User = require('./models/user-schema');
 
+// Clerk Webhook Endpoint (Handles user creation)
 app.post('/api/webhooks/user', express.raw({ type: 'application/json' }), async (req, res) => {
-    try {
-        const evt = req.body;
+  try {
+    const evt = req.body;
+    if (evt.type === 'user.created') {
+      const { id, email_addresses } = evt.data;
+      const newUser = new User({
+        clerkUserId: id,
+        email: email_addresses[0].email_address,
+        emissionsData: [],
+      });
 
-        // Check for the event type (user.created, user.updated, etc.)
-        if (evt.type === 'user.created') {
-            const { id, email_addresses } = evt.data;
-            log(id, email_addresses);
-            // Create a new user in *your* database
-            const newUser = new User({
-                clerkUserId: id,
-                email: email_addresses[0].email_address, // Assuming the first email is the primary
-                emissionsData: [], // Start with an empty array of emission data
-            });
-
-            await newUser.save(); // Save the new user to the database
-            console.log('New user created in database:', newUser);
-            res.status(201).json(newUser); // Send a 201 Created response
-        } else {
-          // You might want to handle other events like user.updated or user.deleted
-          console.log(`Received webhook event: ${evt.type}`);
-          res.status(200).json({ message: 'Webhook received' });
-        }
-
-
-    } catch (error) {
-        console.error('Error processing webhook:', error);
-        res.status(500).json({ error: 'Webhook processing failed' });
+      await newUser.save();
+      console.log('New user created in database:', newUser);
+      res.status(201).json(newUser);
+    } else {
+      console.log(`Received webhook event: ${evt.type}`);
+      res.status(200).json({ message: 'Webhook received (ignored)' });
     }
+  } catch (error) {
+    console.error('Error processing webhook:', error);
+    res.status(500).json({ error: 'Webhook processing failed' });
+  }
 });
 
-// Routes
-app.use('/api', analysisRoutes); // Use the analysis routes
+// Example protected route (authentication REQUIRED)
+app.get('/api/protected', clerkMiddleware({ required: true }), (req, res) => {
+  res.json({ message: 'Protected route', user: req.auth });
+});
+
+// Example route (authentication OPTIONAL)
+app.get('/api/optional', clerkMiddleware(), (req, res) => { // No options = optional
+  if (req.auth.userId) {
+    res.json({ message: 'Authenticated', user: req.auth });
+  } else {
+    res.json({ message: 'Not authenticated' });
+  }
+});
+
+// Example: Get user data (REQUIRED authentication)
+app.get('/api/users/:clerkUserId', clerkMiddleware({ required: true }), async (req, res) => {
+  try {
+    const user = await User.findOne({ clerkUserId: req.params.clerkUserId });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// Example: Add emission data (REQUIRED authentication)
+app.post('/api/users/:clerkUserId/emissions', clerkMiddleware({ required: true }), async (req, res) => {
+  try {
+    const { date, emission_amount } = req.body;
+
+    if (!date || !emission_amount || typeof emission_amount !== 'number') {
+      return res.status(400).json({ message: 'Invalid input data' });
+    }
+
+    const user = await User.findOne({ clerkUserId: req.params.clerkUserId });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.emissionsData.push({
+      date: new Date(date),
+      emission_amount,
+    });
+
+    await user.save();
+    res.status(201).json(user.emissionsData);
+  } catch (error) {
+    console.error("Error adding emission data:", error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+const emissionRoutes = require('./routes/emissionRoutes');
 app.use('/api/emissions', emissionRoutes);
 
-// Serve index.html for root and redirect other routes (for SPA)
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "dist", "index.html"));
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
 });
-app.get("*", (req, res) => {
-    res.redirect("/");
-});
-
-app.listen(PORT, () => console.log(`Server running on port: ${PORT}`));

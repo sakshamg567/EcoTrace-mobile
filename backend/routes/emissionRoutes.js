@@ -2,11 +2,11 @@
 
 const express = require('express');
 const router = express.Router();
-const { ClerkExpressRequireAuth } = require('@clerk/backend/express');
-const User = require('../models/User');
+const { requireAuth } = require('@clerk/express');
+const User = require('../models/user-schema');
 
 // Get emission data for the last 7 days for a specific user
-router.get('/:clerkUserId', ClerkExpressRequireAuth({}), async (req, res) => {
+router.get('/:clerkUserId', requireAuth({}), async (req, res) => {
    try {
       const { clerkUserId } = req.params;
 
