@@ -4,7 +4,7 @@ const express = require("express");
 const path = require("path");
 const cors = require('cors');
 const analysisRoutes = require('./routes/analysisRoutes');
-const { ClerkExpressRequireAuth } = require('@clerk/backend/express');
+const { ClerkExpressRequireAuth } = require('@clerk/express');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
