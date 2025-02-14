@@ -3,10 +3,7 @@ import { View, ScrollView, TouchableOpacity, Alert, ActivityIndicator, Text } fr
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 // Import new components
-import EcoScoreDisplay from '../../components/EcoScoreDisplay';
-import CarbonEmissionsChart from '../../components/CarbonEmissionsChart';
-import EcoActionsCarousel from '../../components/EcoActionsCarousel';
-import TodayMetrics from '../../components/TodayMetrics';
+import {FormField, CarbonEmissionsChart, EcoActionsCarousel, TodayMetrics, EcoScoreDisplay } from '../../components'
 import TestChart from '@/components/TestChart';
 
 
