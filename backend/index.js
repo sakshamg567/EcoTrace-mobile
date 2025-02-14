@@ -4,8 +4,11 @@ const express = require("express");
 const path = require("path");
 const cors = require('cors');
 const analysisRoutes = require('./routes/analysisRoutes');
+const emissionRoutes = require('./routes/emissionRoutes')
 const { ClerkExpressRequireAuth } = require('@clerk/express');
 const mongoose = require("mongoose")
+
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -55,6 +58,7 @@ app.post('/api/webhooks/user', express.raw({ type: 'application/json' }), async 
 
 // Routes
 app.use('/api', analysisRoutes); // Use the analysis routes
+app.use('/api/emissions', emissionRoutes);
 
 // Serve index.html for root and redirect other routes (for SPA)
 app.get("/", (req, res) => {
