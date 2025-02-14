@@ -5,6 +5,7 @@ const path = require("path");
 const cors = require('cors');
 const analysisRoutes = require('./routes/analysisRoutes');
 const { ClerkExpressRequireAuth } = require('@clerk/express');
+const mongoose = require("mongoose")
 
 const app = express();
 const PORT = process.env.PORT || 5000;
