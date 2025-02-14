@@ -9,7 +9,7 @@ import * as ImagePicker from "expo-image-picker"
 import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect
 
-const API_ENDPOINT = 'https://ecotrace-8eu1.onrender.com/analyze';
+const API_ENDPOINT = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
 const EcoScanPage = () => {
   const [scanState, setScanState] = useState("upload");

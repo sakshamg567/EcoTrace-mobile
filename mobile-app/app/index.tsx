@@ -7,7 +7,7 @@ import { images } from "../constants"
 // This is a placeholder function. Replace it with your actual authentication check.
 const isUserSignedIn = () => {
   // Implement your authentication check here
-  return true
+  return false
 }
 
 export default function Index() {
