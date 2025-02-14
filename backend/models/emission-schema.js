@@ -14,6 +14,6 @@ const emissionDataSchema = new mongoose.Schema({
 }, { _id: false }); // Prevent Mongoose from creating a separate _id for subdocuments
 
 
-const Emission = mongoose.model(emission, emissionDataSchema)
+const Emission = mongoose.model('emission', emissionDataSchema)
 
 module.exports = Emission;
