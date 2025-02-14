@@ -18,7 +18,6 @@ const userSchema = new mongoose.Schema({
       type: String,
       required: true,
       unique: true, // Ensure User IDs are unique
-      lowercase: true,
       trim: true,
    },
    email: {

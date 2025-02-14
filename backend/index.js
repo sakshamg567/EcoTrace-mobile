@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const { clerkMiddleware } = require('@clerk/express'); //  SIMPLIFIED IMPORT
 require('dotenv').config();
+const analysisRoutes = require("./routes/analysisRoutes")
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -100,6 +101,7 @@ app.post('/api/users/:clerkUserId/emissions', clerkMiddleware({ required: true }
 
 const emissionRoutes = require('./routes/emissionRoutes');
 app.use('/api/emissions', emissionRoutes);
+app.use('/api/analyze', analysisRoutes);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

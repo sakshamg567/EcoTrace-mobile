@@ -9,7 +9,7 @@ const User = require('../models/user-schema');
 router.get('/:clerkUserId', requireAuth({}), async (req, res) => {
    try {
       const { clerkUserId } = req.params;
-
+      
       // Find the user by clerkUserId
       const user = await User.findOne({ clerkUserId });
 
