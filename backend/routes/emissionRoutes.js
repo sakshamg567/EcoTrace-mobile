@@ -15,11 +15,6 @@ router.get('/:clerkUserId', async (req, res) => { // ADDED AUTH MIDDLEWARE
       return res.status(404).json({ message: 'User not found' });
     }
 
-  
-
-    const labels = [];
-    const datasetData = [];
-
     const chartData = user.emissionsData
     console.log(chartData);
     
