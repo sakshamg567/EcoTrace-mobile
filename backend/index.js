@@ -5,6 +5,7 @@ const cors = require('cors');
 const { clerkMiddleware } = require('@clerk/express'); //  SIMPLIFIED IMPORT
 require('dotenv').config();
 const analysisRoutes = require("./routes/analysisRoutes")
+const path = require("path")
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -12,6 +13,7 @@ const port = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "dist")));
 
 mongoose.connect(process.env.MONGO_DB_URL)
   .then(() => console.log('Connected to MongoDB'))
@@ -102,6 +104,14 @@ app.post('/api/users/:clerkUserId/emissions', clerkMiddleware({ required: true }
 const emissionRoutes = require('./routes/emissionRoutes');
 app.use('/api/emissions', emissionRoutes);
 app.use('/api/analyze', analysisRoutes);
+
+app.get("/", (req,res) => {
+  res.sendFile(path.join(__dirname, "index.html"))
+})
+
+app.get("*", (req,res) => {
+  res.redirect("/")
+})
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
